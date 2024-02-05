@@ -1,7 +1,5 @@
 FROM openjdk:17-jdk-slim
 
-WORKDIR /app
-
 COPY target/Prueba-0.0.1-SNAPSHOT.jar app.jar
 
 # Exponer el puerto de la aplicación Spring Boot (normalmente 8080)
