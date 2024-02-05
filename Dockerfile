@@ -1,7 +1,23 @@
-FROM amazoncorretto:17-alpine-jdk
+#FROM amazoncorretto:17-alpine-jdk
+#
+#RUN apk add --no-cache postgresql-client
+#
+#COPY target/Prueba-0.0.1-SNAPSHOT.jar app.jar
+#
+#ENTRYPOINT ["java" , "-jar" , "/app.jar"]
 
-RUN apk add --no-cache postgresql-client
+#
+# Build stage
+#
+FROM maven:4.0.0-jdk-11 AS build
+COPY . .
+RUN mvn clean package -DskipTests
 
-COPY target/Prueba-0.0.1-SNAPSHOT.jar app.jar
-
-ENTRYPOINT ["java" , "-jar" , "/app.jar"]
+#
+# Package stage
+#
+FROM openjdk:11-jdk-slim
+COPY --from=build /target/Prueba-0.0.1-SNAPSHOT.jar app.jar
+# ENV PORT=8080
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar"]
